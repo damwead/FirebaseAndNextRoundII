@@ -3,15 +3,23 @@ import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import Link from 'next/link';
 
+import Loader from '../components/Loader';
+
+import toast from 'react-hot-toast';
+
 export default function Home() {
   return (
     <div>
-      <Link prefetch={false} href={{
-        pathname: '/[username]',
-        query: { username: 'lil_kenny' },
-      }}> 
-      <h3>lil kenny's profile</h3>
-      </Link>
+      <button onClick={() => toast.success('hello toast', 
+        {position: "top-right", icon: '👏', style: {
+          borderRadius: '10px', 
+          background: '#333',
+          color: '#fff'
+          }
+        }
+      )}>
+        Toast me!
+        </button>
     </div>
   );
 }
