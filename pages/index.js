@@ -10,6 +10,7 @@ import toast from 'react-hot-toast';
 export default function Home() {
   return (
     <div>
+      {/* Toast */}
       <button onClick={() => toast.success('hello toast', 
         {position: "top-right", icon: '👏', style: {
           borderRadius: '10px', 
