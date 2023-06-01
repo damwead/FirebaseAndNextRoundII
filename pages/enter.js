@@ -2,9 +2,11 @@ import { auth, firestore, googleAuthProvider } from '../lib/firebase';
 import { doc, writeBatch, getDoc, getFirestore } from 'firebase/firestore';
 import { signInWithPopup, signInAnonymously, signOut } from 'firebase/auth';
 
+import { UserContext } from '../lib/context';
+import { useContext } from 'react';
+
 export default function EnterPage({ }) {
-  const user = null;
-  const username = null;
+  const { user, username} = useContext(UserContext);
 
   // 3 states:
   // user signed out
@@ -33,8 +35,8 @@ function SignInButton() {
  } 
 
  function SignOutButton() {
-  return <button onClick={() => auth.SignOut()}></button>
- }
+  return <button onClick={() => auth.signOut()}>Sign Out</button>;
+}
 
  function UserNameForm() {
 
