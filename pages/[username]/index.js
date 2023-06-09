@@ -3,36 +3,43 @@ import UserProfile from '../../components/UserProfile';
 import { query, collection, where, getDocs, limit, orderBy, getFirestore } from 'firebase/firestore';
 
 import { getUserWithUsername } from '../../lib/firebase';
+import NotFound, { notFound } from 'next/navigation';
 import { postToJSON } from '../../lib/firebase';
 
 
 export async function getServerSideProps({ query: urlQuery }) {
-// server side rendering, next will run it on server
-// every time page is requested
-// it send back the props(usr and pic) to component
-const { username } = urlQuery;; // we'll get it from url
+  // server side rendering, next will run it on server
+  // every time page is requested
+  // it send back the props(usr and pic) to component
+  const { username } = urlQuery;; // we'll get it from url
 
-const userDoc = await getUserWithUsername(username);
+  const userDoc = await getUserWithUsername(username);
 
-// We need to retrive user posts
-// JSON serializable data
-let user = null;
-let posts = null;
+  if (!userDoc) {
+    return {
+      notFound: true,
+    };
+  }
 
-if (userDoc) {
-  user = userDoc.data();
+  // We need to retrive user posts
+  // JSON serializable data
+  let user = null;
+  let posts = null;
 
-  const postsQuery = query(
-    collection(getFirestore(), userDoc.ref.path, 'posts'),
-    where('published', '==', true),
-    orderBy('createdAt', 'desc'), // descend order
-    limit(5)
-  );
-  posts = (await getDocs(postsQuery)).docs.map(postToJSON); // need to be serializable to JSON
-}
+  if (userDoc) {
+    user = userDoc.data();
 
-return {
-  props: { user, posts } // will be passed o the page component as a props
+    const postsQuery = query(
+      collection(getFirestore(), userDoc.ref.path, 'posts'),
+      where('published', '==', true),
+      orderBy('createdAt', 'desc'), // descend order
+      limit(5)
+    );
+    posts = (await getDocs(postsQuery)).docs.map(postToJSON); // need to be serializable to JSON
+  }
+
+  return {
+    props: { user, posts } // will be passed o the page component as a props
   };
 }
 
