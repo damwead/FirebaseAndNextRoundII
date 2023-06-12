@@ -1,7 +1,9 @@
-export default function AdminPostsPage({ }) {
+import AuthCheck from "../../components/AuthCheck";
+
+export default function AdminPostEdit(props) {
   return (
-    <main>
-      <h1>Admin</h1>
-    </main>
-  )
+    <AuthCheck>
+      <h3>Admin</h3>
+    </AuthCheck>
+  );
 }
