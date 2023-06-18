@@ -24,12 +24,14 @@ export default function AdminPostsPage(props) {
 }
 
 function PostList() {
+  // query to user subcollection of currently authenticated user
   const ref = collection(getFirestore(), 'users', auth.currentUser.uid, 'posts')
-  const postQuery = query(ref, orderBy('createdAt'))
+  const postQuery = query(ref, orderBy('createdAt')) // sort by date
 
-  const [querySnapshot] = useCollection(postQuery);
+  const [querySnapshot] = useCollection(postQuery); // hook to read the collection
 
-  const posts = querySnapshot?.docs.map((doc) => doc.data());
+  const posts = querySnapshot?.docs.map((doc) => doc.data()); // map doc snapsot by data
+  // TODO: also see useCollectionData, there's an option to delete a doc
 
   return (
     <>
@@ -40,12 +42,12 @@ function PostList() {
 }
 
 function CreateNewPost() {
-  const router = useRouter();
-  const { username } = useContext(UserContext);
-  const [title, setTitle] = useState('');
+  const router = useRouter(); // aces url in browser
+  const { username } = useContext(UserContext); // get user's username
+  const [title, setTitle] = useState(''); // title the only state that changes
 
   // Ensure slug is URL safe
-  const slug = encodeURI(kebabCase(title));
+  const slug = encodeURI(kebabCase(title)); // built-on browser function
 
   // Validate length
   const isValid = title.length > 3 && title.length < 100;
