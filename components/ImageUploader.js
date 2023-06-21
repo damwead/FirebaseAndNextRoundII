@@ -5,9 +5,9 @@ import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 
 // Uploads images to Firebase Storage
 export default function ImageUploader() {
-  const [uploading, setUploading] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [downloadURL, setDownloadURL] = useState(null);
+  const [uploading, setUploading] = useState(false); // wether if's uploading
+  const [progress, setProgress] = useState(0); // progress of uploading
+  const [downloadURL, setDownloadURL] = useState(null); // wether we got a url
 
   // Creates a Firebase Upload Task
   const uploadFile = async (e) => {
@@ -16,6 +16,8 @@ export default function ImageUploader() {
     const extension = file.type.split('/')[1];
 
     // Makes reference to the storage bucket location
+    // upload directory/userID
+    // Date.now() - makes the name of file unique 
     const fileRef = ref(storage, `uploads/${auth.currentUser.uid}/${Date.now()}.${extension}`);
     setUploading(true);
 
@@ -23,6 +25,8 @@ export default function ImageUploader() {
     const task = uploadBytesResumable(fileRef, file)
 
     // Listen to updates to upload task
+    // snapshot contains meta data, including transferred bytes
+    // with progress state it would be updated in UI
     task.on(STATE_CHANGED, (snapshot) => {
       const pct = ((snapshot.bytesTransferred / snapshot.totalBytes) * 100).toFixed(0);
       setProgress(pct);
@@ -30,8 +34,8 @@ export default function ImageUploader() {
 
     // Get downloadURL AFTER task resolves (Note: this is not a native Promise)
     task
-      .then((d) => getDownloadURL(fileRef))
-      .then((url) => {
+      .then((d) => getDownloadURL(fileRef)) // get url from orig ref
+      .then((url) => { // thats a promise, we can chain .then again and update state
         setDownloadURL(url);
         setUploading(false);
       });
@@ -40,9 +44,10 @@ export default function ImageUploader() {
   return (
     <div className="box">
       <Loader show={uploading} />
+      {/* if uploading show progress */}
       {uploading && <h3>{progress}%</h3>}
 
-      {!uploading && (
+      {!uploading && ( // if not uploading show btn
         <>
           <label className="btn">
             📸 Upload Img
@@ -50,7 +55,7 @@ export default function ImageUploader() {
           </label>
         </>
       )}
-
+      {/* if theres download url we gona show it as a code snipet */}
       {downloadURL && <code className="upload-snippet">{`![alt](${downloadURL})`}</code>}
     </div>
   );

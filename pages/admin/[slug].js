@@ -59,8 +59,9 @@ function PostManager() {
 
 function PostForm({ defaultValues, postRef, preview }) {
   const { register, errors, handleSubmit, formState, reset, watch } = useForm({ defaultValues, mode: 'onChange' });
-
-  const { isValid, isDirty } = formState;
+  
+   // formState gives info about curr state of the form
+  const { isValid, isDirty } = formState; 
 
   const updatePost = async ({ content, published }) => {
     await updateDoc(postRef, {
