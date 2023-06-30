@@ -104,7 +104,7 @@ function PostForm({ defaultValues, postRef, preview }) {
         {/* {errors.content && <p className="text-danger">{errors.content.message}</p>} */}
 
         <fieldset>
-          <input className={styles.checkbox} name="published" type="checkbox" {...register} />
+          <input className={styles.checkbox} name="published" type="checkbox" {...register("published")} />
           <label>Published</label>
         </fieldset>
 
