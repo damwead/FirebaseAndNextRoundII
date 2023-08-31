@@ -12,6 +12,8 @@ import { useContext } from 'react';
 
 
 export async function getStaticProps({ params }) {
+  // icr - incremental static regeneration
+  // renders page on build time in order to pre render the page
   const { username, slug } = params;
   const userDoc = await getUserWithUsername(username);
 
@@ -30,7 +32,7 @@ export async function getStaticProps({ params }) {
 
   return {
     props: { post, path },
-    revalidate: 10,
+    revalidate: 5000,
   };
 }
 
